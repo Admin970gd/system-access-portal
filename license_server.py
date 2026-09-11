@@ -841,16 +841,16 @@ class LicenseHandler(BaseHTTPRequestHandler):
                             return
                         break
 
-                self._respond(200, "application/json", json.dumps({
-                    "status": "Pending",
-                    "message": req_msg
-                }).encode())
-                return
-
-                if not req_info:
+                if req_info:
+                    self._respond(200, "application/json", json.dumps({
+                        "status": req_status,
+                        "message": req_msg
+                    }).encode())
+                    return
+                else:
                     r_id = f"REQ-{secrets.token_hex(4).upper()}"
                     comp_name = data.get("computer_name", "Unknown Device")
-                    user_name = data.get("user_name", f"Buyer ({comp_name})")
+                    user_name = data.get("user_name", f"Viewer ({dev_id})")
                     req_info = {
                         "request_id": r_id,
                         "device_id": dev_id,
@@ -859,20 +859,19 @@ class LicenseHandler(BaseHTTPRequestHandler):
                         "os": data.get("os", "Windows"),
                         "app_version": data.get("app_version", "2.5.0"),
                         "status": "Pending",
-                        "activation_key": "",
+                        "activation_key": act_key,
                         "created_at": now_str,
                         "last_seen_at": now_str
                     }
                     reqs[r_id] = req_info
-                    add_log(f"NEW Activation Request: {user_name} on {comp_name} [{dev_id}]", "info")
-
-                save_data(DB)
-                self._respond(200, "application/json", json.dumps({
-                    "status": req_info.get("status", "Pending"),
-                    "message": req_msg,
-                    "offline_grace_days": grace_days
-                }).encode())
-                return
+                    add_log(f"NEW Access Request: {user_name} on {comp_name} [{dev_id}] Key: {act_key}", "info")
+                    save_data(DB)
+                    self._respond(200, "application/json", json.dumps({
+                        "status": "Pending",
+                        "message": req_msg,
+                        "offline_grace_days": grace_days
+                    }).encode())
+                    return
 
             elif self.path == "/api/license/submit_key":
                 dev_id = data.get("device_id", "").strip().upper()
