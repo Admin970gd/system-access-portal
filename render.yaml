@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: system-access-portal
+    runtime: python
+    buildCommand: ""
+    startCommand: python license_server.py
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ADMIN_PIN
+        value: 9B5E9B
