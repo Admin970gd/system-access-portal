@@ -1,0 +1,8 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY . /app
+ENV PYTHONUNBUFFERED=1
+ENV PORT=10000
+ENV ADMIN_PIN=9B5E9B
+EXPOSE 10000
+CMD ["python", "license_server.py"]
