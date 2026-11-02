@@ -9,4 +9,4 @@ Central Cloud Management & License Approval Server.
 - Automatic zero-dependency standard Python 3 runtime
 
 ### Master Admin Login
-- Default PIN: 9B5E9B (or set via ADMIN_PIN environment variable)
+- Default PIN:000000(or set via ADMIN_PIN environment variable)
